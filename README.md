@@ -1,16 +1,153 @@
-# My-Tween
+MyTween
 
--I Wanted to learn how the Tweening system architecture operates and work, so I made my own tweening system/library.
--this is not a full fledged Library like the one's professionals make and sell. instead is just the bare bones version I made from how far I can think in terms of design and use cases.
-- I have made this system by keeping performnace and speed in my mind so to avoid so many garabage collection and CPU jumping between requests, struct is used to store pure data in TweenData, just one delegate is used inside this struct.
-----------------------------------------------------------------------------
-What It offers:-
--Unscaled Time Execution is supported in case of game pause.
-- This Tween system is pretty good for only simple tweening of stuff, like UI animation etc. chaining of tween is available in a very limited not recommeneded to use kind of way until and unless you understand or desire that behaviour example the UnscaledTime doesn't work for all Tween that are chained using ThenDO(). so if you are going to use this, use for eduational purpose of learning about how a tween system at a very beginner stage looks like and work.
-- At its core the system is built upon struct TweenData so Garbage collection is none or very little if any. 
-- Object Pooling is used for optimization, and it doesn't grow dynamically so change MAX_TWEEN value in TweenManager.cs for your use requirements.
-- struct based Tween Data.
-- callbacks are grouped and kept in collection based on category in Tween Manager to keep the struct Tween datatype small.
-- also to avoid closures in Tween Helper methods for various use cases if you want to make your own I have made TweenCreation method generic to allow <TTarget, TValue> here TValue is the value to be used in lerp for start and end. TTarget is if you want to update the actual object you are applying tween on so you can use OnUpdate action to modify target without generating closures and capture variables to some extent. you can look inside the code in Tween.cs to understand this.
-- There are 30 easing functions in the EasingMagic.cs file. and to choose one of them, switch expression is used to evaluate the appropriate function during update while lerping.
-- Features OnUpdate(), OnFinish(), OnKill(), Kill(), Kill(float afterTime),KillAll(), PingPong()[-1=>Loop Forever, value > 0 will loop till it decrements and reaches zero, 0 => ping pong is not active this means.]
+MyTween is a lightweight tweening system built primarily as a learning project to understand how tweening architectures work internally.
+
+This is not intended to compete with professional tweening libraries. Instead, it focuses on exploring design ideas, performance considerations, and low-allocation data handling.
+
+The system is intentionally minimal and is best used for educational purposes or simple animations such as UI transitions.
+
+Design Goals
+
+Learn how tweening systems are structured internally.
+
+Reduce garbage collection pressure during runtime.
+
+Keep data structures compact and cache-friendly.
+
+Avoid unnecessary allocations such as closures where possible.
+
+Provide a simple but functional tween workflow.
+
+Core Architecture
+
+At the heart of the system is the TweenData struct.
+
+Struct-Based Tween Storage
+
+Tween information is stored inside a struct instead of a class. This helps reduce heap allocations and lowers garbage collection pressure.
+
+TweenData contains only the minimal data needed for tween execution, including a single delegate.
+
+Callback Organization
+
+To keep TweenData small and efficient, callbacks such as:
+
+OnUpdate
+
+OnFinish
+
+OnKill
+
+are grouped and stored separately in collections inside TweenManager.
+
+This design keeps the core tween struct lightweight and avoids bloating the data layout.
+
+Object Pooling
+
+Tween instances are reused through object pooling.
+
+The pool does not grow dynamically.
+To change the number of available tweens, modify:
+
+MAX_TWEEN
+
+in TweenManager.cs.
+
+Allocation Avoidance
+
+Closures are a common hidden source of garbage allocations in tween systems.
+
+To reduce this:
+
+The tween creation API supports generics:
+
+TweenCreate<TTarget, TValue>
+
+TTarget – the object being modified
+
+TValue – the value used during interpolation
+
+This allows updating targets via OnUpdate without capturing variables inside closures in many cases.
+
+Easing System
+
+The system includes 30 easing functions located in:
+
+EasingMagic.cs
+
+A switch expression selects the appropriate easing function during tween evaluation.
+
+Time Handling
+Unscaled Time Support
+
+Tweens can run using unscaled time, allowing animations to continue when the game is paused.
+
+Features
+
+Struct-based tween data
+
+Object pooling
+
+Unscaled time support
+
+Generic tween creation to reduce closure allocations
+
+30 easing functions
+
+Basic tween lifecycle callbacks
+
+Available callbacks:
+
+OnUpdate()
+
+OnFinish()
+
+OnKill()
+
+Tween control methods:
+
+Kill()
+
+Kill(float afterTime)
+
+KillAll()
+
+PingPong
+
+Ping-pong behaviour can be enabled using:
+
+PingPong(int loopCount)
+
+Behavior rules:
+
+-1 → Loop forever
+
+> 0 → Loop until the count decrements to zero
+
+0 → Ping-pong disabled
+
+Tween Chaining
+
+Basic chaining is available through:
+
+ThenDO()
+
+However, this feature is limited and not recommended for heavy usage.
+
+For example:
+
+UnscaledTime may not propagate correctly through chained tweens.
+
+Use chaining only if you understand the underlying behavior.
+
+Intended Use
+
+This system is suitable for:
+
+Learning tween architecture
+
+Simple UI animations
+
+Small projects where minimal allocations are desired
+
+It is not designed as a production-ready replacement for full tweening libraries.
