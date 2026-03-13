@@ -4,9 +4,9 @@ MyTween is a lightweight tweening system built primarily as a learning project t
 
 This is not intended to compete with professional tweening libraries. Instead, it focuses on exploring design ideas, performance considerations, and low-allocation data handling.
 
-The system is intentionally minimal and is best used for educational purposes or simple animations such as UI transitions.
+You can use it however you seem it fit you project but The system is intentionally minimal and is best used for educational purposes or simple animations such as UI transitions.
 
-Design Goals
+--Design Goals
 
 Learn how tweening systems are structured internally.
 
@@ -18,7 +18,7 @@ Avoid unnecessary allocations such as closures where possible.
 
 Provide a simple but functional tween workflow.
 
-Core Architecture
+--Core Architecture
 
 At the heart of the system is the TweenData struct.
 
@@ -28,7 +28,7 @@ Tween information is stored inside a struct instead of a class. This helps reduc
 
 TweenData contains only the minimal data needed for tween execution, including a single delegate.
 
-Callback Organization
+--Callback Organization
 
 To keep TweenData small and efficient, callbacks such as:
 
@@ -42,7 +42,7 @@ are grouped and stored separately in collections inside TweenManager.
 
 This design keeps the core tween struct lightweight and avoids bloating the data layout.
 
-Object Pooling
+--Object Pooling
 
 Tween instances are reused through object pooling.
 
@@ -53,7 +53,7 @@ MAX_TWEEN
 
 in TweenManager.cs.
 
-Allocation Avoidance
+--Allocation Avoidance
 
 Closures are a common hidden source of garbage allocations in tween systems.
 
@@ -69,7 +69,7 @@ TValue – the value used during interpolation
 
 This allows updating targets via OnUpdate without capturing variables inside closures in many cases.
 
-Easing System
+--Easing System
 
 The system includes 30 easing functions located in:
 
@@ -94,7 +94,7 @@ Generic tween creation to reduce closure allocations
 
 30 easing functions
 
-Basic tween lifecycle callbacks
+--Basic tween lifecycle callbacks
 
 Available callbacks:
 
@@ -122,7 +122,7 @@ Behavior rules:
 
 -1 → Loop forever
 
-> 0 → Loop until the count decrements to zero
+count > 0 → Loop until the count decrements to zero
 
 0 → Ping-pong disabled
 
@@ -134,7 +134,7 @@ ThenDO()
 
 However, this feature is limited and not recommended for heavy usage.
 
-For example:
+--For example:
 
 UnscaledTime may not propagate correctly through chained tweens.
 
