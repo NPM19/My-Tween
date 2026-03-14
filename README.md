@@ -6,6 +6,11 @@ This is not intended to compete with professional tweening libraries. Instead, i
 
 You can use it however you seem it fit you project but The system is intentionally minimal and is best used for educational purposes or simple animations such as UI transitions.
 
+!!!! DISCLAIMER WARNING !!!!
+Too much boxing and unboxing happens in this system per frame during Update() so keeping MAX_TWEENS < 400 or 500 is going to be just fine, going above it will cause major frame drop spikes and performance decline.  
+------------------------------------------------------------------------------------
+
+
 --Design Goals
 
 Learn how tweening systems are structured internally.
